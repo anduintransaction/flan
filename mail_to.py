@@ -9,7 +9,7 @@ msg = EmailMessage()
 msg["From"] = os.getenv('SMTP_FROM')
 msg["Subject"] = "Flan scan finished"
 msg["To"] = os.getenv('SMTP_TO')
-msg.set_content("This is the message body")
+msg.set_content("Flan scan finsished, please find result attached")
 msg.add_attachment(open(filename, "r", encoding="utf8").read(), filename=filename)
 
 print("filename:" + filename)
