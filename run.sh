@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 rm -rf /usr/share/nmap/scripts/vulners
 git clone https://github.com/vulnersCom/nmap-vulners /usr/share/nmap/scripts/vulners
 nmap --script-updatedb
@@ -58,6 +60,5 @@ then
     sed -i 's/#/\\#/g' $root_dir$report_file
     sed -i 's/%/\\%/g' $root_dir$report_file
 fi
-python /mail_to.py $root_dir$report_file
 upload $report_file
-
+python /mail_to.py $root_dir$report_file
