@@ -1,7 +1,7 @@
 #!/bin/sh
 
 set -e
-
+id
 rm -rf /usr/share/nmap/scripts/vulners
 git clone https://github.com/vulnersCom/nmap-vulners /usr/share/nmap/scripts/vulners
 nmap --script-updatedb
@@ -43,7 +43,7 @@ function get_filename(){
     echo $1 | tr / -
 }
 
-mkdir $root_dir$xml_dir
+mkdir -p $root_dir$xml_dir
 while IFS= read -r line
 do
   current_time=$(date "+%Y.%m.%d-%H.%M.%S")
@@ -52,7 +52,7 @@ do
   upload $xml_dir/$filename
 done < /shared/ips.txt
 
-python /output_report.py $root_dir$xml_dir $root_dir$report_file /shared/ips.txt
+python /output_report.py $root_dir$xml_dir $root_dir$report_file /shared/ips.txt /shared/ignore_cve.txt
 if [[ $report_extension = "tex" ]]
 then
     sed -i 's/_/\\_/g' $root_dir$report_file
@@ -61,4 +61,8 @@ then
     sed -i 's/%/\\%/g' $root_dir$report_file
 fi
 upload $report_file
-python /mail_to.py $root_dir$report_file
+if [ -n "$SMTP_SERVER" ];
+then
+	python /mail_to.py $root_dir$report_file
+fi
+
