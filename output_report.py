@@ -58,11 +58,27 @@ def create_report_builder(report_type: str) -> ReportBuilder:
     return builder_map[report_type](provider)
 
 
-def main(dirname: str, output_file: str, ip_file: str, report_type: str = 'tex'):
+def read_ignore_file(ignore_file: str):
+    l=[]
+    try:
+        with open(ignore_file) as file:
+            for line in file:
+                line = line.strip() #preprocess line
+                if line != "" and line[0] != "#":
+                    l.append(line)
+
+    except Exception as e:
+        print("Exception", str(e))
+
+    return l
+
+def main(dirname: str, output_file: str, ip_file: str, ignore_file: str, report_type: str = 'tex'):
     nmap_command = ''
     start_date = ''
     builder = create_report_builder(report_type)
-    parser = FlanXmlParser()
+    ignore_cves = read_ignore_file(ignore_file)
+    print("Ignore these CVEs:", ignore_cves)
+    parser = FlanXmlParser(ignore_cves)
 
     for entry in os.scandir(dirname):  # type: os.DirEntry
         if not (entry.is_file() and entry.name.endswith('.xml')):
@@ -78,4 +94,4 @@ def main(dirname: str, output_file: str, ip_file: str, report_type: str = 'tex')
 
 if __name__ == '__main__':
     report_format = os.getenv('format', 'tex')
-    main(*sys.argv[1:4], report_type=report_format)
+    main(*sys.argv[1:5], report_type=report_format)

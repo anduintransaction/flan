@@ -13,9 +13,11 @@ class FlanXmlParser:
     """
     NMAP XML file reader and contents parser
     """
-    def __init__(self):
+    def __init__(self, ignore_cves=[]):
         self.results = defaultdict(ScanResult)
         self.vulnerable_services = []  # type: List[str]
+        print("[flan_scan] Inside FlanXmlParser(), ignore_cves=", ignore_cves)
+        self.ignore_cves = ignore_cves
 
     @property
     def vulnerable_dict(self) -> Dict[str, ScanResult]:
@@ -55,6 +57,7 @@ class FlanXmlParser:
             self.parse_host(hosts)
 
     def parse_vuln(self, app_name: str, vuln: List[Dict[str, Any]]):
+        print("[flan_scan] Inside parse_vuln(), self.ignore_cves:", self.ignore_cves)
         vuln_name = ''
         severity = ''
         vuln_type = ''
@@ -65,8 +68,11 @@ class FlanXmlParser:
                 vuln_name = field['#text']
             elif field['@key'] == 'type':
                 vuln_type = field['#text']
-
-        self.results[app_name].vulns.append(Vuln(vuln_name, vuln_type, severity))
+        print("[flan_scan] Parsed vuln, vuln_name:", vuln_name)
+        if not vuln_name in self.ignore_cves:
+            self.results[app_name].vulns.append(Vuln(vuln_name, vuln_type, severity))
+        else:
+            print("[flan_scan] Vuln ", vuln_name, " is ignored")
 
     def parse_script(self, ip_addr: str, port: str, app_name: str, script: Dict[str, Any]):
         if 'table' not in script:
