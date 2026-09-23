@@ -16,7 +16,7 @@ class FlanXmlParser:
     def __init__(self, ignore_cves=[]):
         self.results = defaultdict(ScanResult)
         self.vulnerable_services = []  # type: List[str]
-        print("[flan_scan] Inside FlanXmlParser(), ignore_cves=", ignore_cves)
+        #print("[flan_scan] Inside FlanXmlParser(), ignore_cves=", ignore_cves)
         self.ignore_cves = ignore_cves
 
     @property
