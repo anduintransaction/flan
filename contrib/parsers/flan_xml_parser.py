@@ -57,7 +57,7 @@ class FlanXmlParser:
             self.parse_host(hosts)
 
     def parse_vuln(self, app_name: str, vuln: List[Dict[str, Any]]):
-        print("[flan_scan] Inside parse_vuln(), self.ignore_cves:", self.ignore_cves)
+        #print("[flan_scan] Inside parse_vuln(), self.ignore_cves:", self.ignore_cves)
         vuln_name = ''
         severity = ''
         vuln_type = ''
