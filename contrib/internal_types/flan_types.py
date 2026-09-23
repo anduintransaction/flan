@@ -31,20 +31,39 @@ class Vuln:
         }
 
     @staticmethod
-    def convert_severity(severity: float) -> str:
-        """
-        :return: Float severity value to text
-        """
+    def convert_severity(severity: float | str | None) -> str:
+        """Convert a numeric severity (or numeric string) to a text level."""
+        if severity is None or (isinstance(severity, str) and not severity.strip()):
+            return 'Unknown'   # or 'Medium' if that's your intended default
+            
         try:
             sev = float(severity)
-            if sev < 4:
-                return 'Low'
-            if sev < 7:
-                return 'Medium'
         except (TypeError, ValueError):
-            print(repr(severity), type(severity))
+            print(f"Invalid severity: {severity!r}")
+            return 'Unknown'
+
+        if sev != sev:  # NaN check
+            return 'Unknown'
+        if sev < 4:
+            return 'Low'
+        if sev < 7:
             return 'Medium'
         return 'High'
+        
+#    def convert_severity(severity: float) -> str:
+#        """
+#        :return: Float severity value to text
+#        """
+#        try:
+#            sev = float(severity)
+#            if sev < 4:
+#                return 'Low'
+#            if sev < 7:
+#                return 'Medium'
+#        except (TypeError, ValueError):
+#            print(repr(severity), type(severity))
+#            return 'Low'
+#        return 'High'
 
     @property
     def severity_str(self) -> str:
