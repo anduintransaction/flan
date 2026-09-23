@@ -77,7 +77,7 @@ def main(dirname: str, output_file: str, ip_file: str, ignore_file: str, report_
     start_date = ''
     builder = create_report_builder(report_type)
     ignore_cves = read_ignore_file(ignore_file)
-    print("Ignore these CVEs:", ignore_cves)
+    #print("Ignore these CVEs:", ignore_cves)
     parser = FlanXmlParser(ignore_cves)
 
     for entry in os.scandir(dirname):  # type: os.DirEntry
