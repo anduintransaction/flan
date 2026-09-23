@@ -35,9 +35,14 @@ class Vuln:
         """
         :return: Float severity value to text
         """
-        if severity < 4:
-            return 'Low'
-        if severity < 7:
+        try:
+            sev = float(severity)
+            if sev < 4:
+                return 'Low'
+            if sev < 7:
+                return 'Medium'
+        except (TypeError, ValueError):
+            print(repr(severity), type(severity))
             return 'Medium'
         return 'High'
 
